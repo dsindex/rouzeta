@@ -4,7 +4,7 @@ rouzeta
 - 설명
   - FST에 기반한 형태소 분석기 [Rouzeta](https://shleekr.github.io/)의 사용법
 
-- Rouzeta 다운로드
+- Rouzeta 다운로드 & 소스 설명
   - [rouzeta](https://shleekr.github.io/public/data/rouzeta.tar.gz)
   ```
   $ tar -zxvf rouzeta.tar.gz
@@ -16,7 +16,116 @@ rouzeta
   korean.lexc  kormoran.script  morphrules.foma  splithangul.foma
 
   ./Tagger:
-  koreanuni.xml  korfinaluni.fst  korinvert.sym  testme.txt  worduniprob.sym
+  koreanuni.xml  korfinaluni.fst  korinvert.sym  kydf testme.txt  worduniprob.sym
+  ```
+  - 소스 설명
+  ```
+  - Rouzeta
+    - korean.lexc
+	  형태소들과 각 형태소들의 접속 네트워크가 있는 사전
+	  예를 들어, 
+
+      LEXICON Root
+        ncLexicon ; ! 보통명사
+	    ...
+        acLexicon ; ! 접속부사
+
+      LEXICON acLexicon ! 접속부사
+        고로/ac	acNext ;
+        곧/ac	acNext ;
+        그나/ac	acNext ;
+		하지만/ac acNext ;
+		...
+
+      LEXICON acNext
+        finLexicon ;
+        srLexicon ;
+        pxLexicon ;
+        nnLexicon ;
+		...
+
+      위와 같이 기술하면, '고로/ac #', '곧/ac "/sr', '하지만/ac 은/px', '하지만/ac 첫째/nn'
+	  등의 형태소 sequence가 valid하다는 의미이다.
+	  일반적으로 어떤 태그와 어떤 태그가 결합가능한지 여부를 여기에 기술한다.
+	  
+	- morphrules.foma
+	  어휘형과 표층형간의 규칙이 적혀 있는 룰 파일
+	  예를 들어, 
+
+      define IrrConjD		%_ㄷ -> %_ㄹ || _ %/irrd %/vb ㅇ ;
+
+	  IrrConjD 규칙은 'ㄷ-불규칙'을 기술해서  아래와 같이 변환가능하게 한다.
+	  'ㄷ ㅏ %_ㄷ  irrd vb ㅇ' -> 'ㄷ ㅏ %_ㄹ  irrd vb ㅇ'
+
+	- splithangul.foma
+	  utf-8 한글 음절을 자소로 분리하는 규칙
+	  예를 들어,
+
+	  '형 -> ㅎ ㅕ %_ㅇ'
+
+      음절을 자소단위로 분리하는 규칙이다. '%_ㅇ'에서 '%_'는 종성을 의미한다. 
+
+	- kormoran.script
+	  위 3가지를 가지고 하나의 유한 상태 변환기 (finite state transducer)를 만드는 파일
+	  즉, 형태소 분석용 FST(Rouzeta FST)를 만든다.
+	  예를 들어, 
+
+	  define SingleWordPhrase		Lexicon .o. SplitHangul .o.					    ! 사전으로부터 자소 분리
+	  							    AlternationRules .o.						    ! 변환규칙 적용
+								    RemoveTags .o.								    ! 품사/불규칙 태그 삭제
+								    SplitHangul.i .o.							    ! 자소를 한글로 바꿈
+								    ~$[Syllable] .o. ~$[KorChar] .o. ~$[CodaOnly] ; ! 자소열, 자모만, 종성 글자 제거
+
+	  이 코드는 korean.lexc에 기술된 Lexicon을 자소단위로 분리하고
+	  morphrules.foma의 변환규칙을 적용한 다음, 이 결과를 다시 음절단위로 변환하는
+	  FST를 구성한다.
+
+	  korean.lexc에 있는 아래 두 엔트리에 대해서 설명하면, 
+
+	  LEXICON vbNext
+	    ...
+		epLexicon
+		...
+      깨닫/irrd/vb	vbNext ; ! vbLexicon, 동사
+      았/ep	epNext ; ! epLexicon, 선어말어미
+
+	  vbLexicon                         epLexicon
+	  {ㄲ ㅐ ㄷ ㅏ %_ㄷ /irrd /vb}  ->  {ㅇ ㅏ %_ㅆ /ep}
+
+	  Lexicon 네트웍을 구성하면 vbLexicon의 모든 엔트리와 epLexicon의 모든 엔트리의 연결이 생성되어 있을 것이고
+	  여기서 음절을 자소로 분리한다음 IrrConjD 규칙을 적용하면
+
+	  ㄲ ㅐ ㄷ ㅏ %_ㄷ /irrd /vb ㅇ ㅏ %_ㅆ /ep
+	  => 
+	  ㄲ ㅐ ㄷ ㅏ %_ㄹ /irrd /vb ㅇ ㅏ %_ㅆ /ep
+
+	  이 결과에서 '품사/불규칙 태그'등을 삭제해야 다시 자소를 음절로 바꿀 수 있으므로, 삭제하면
+
+	  ㄲ ㅐ ㄷ ㅏ %_ㄹ /irrd /vb ㅇ ㅏ %_ㅆ /ep
+	  =>
+	  ㄲ ㅐ ㄷ ㅏ %_ㄹ ㅇ ㅏ %_ㅆ
+
+	  이것을 다시 음절단위로 변환하자.
+
+	  ㄲ ㅐ ㄷ ㅏ %_ㄹ ㅇ ㅏ %_ㅆ
+	  =>
+	  깨달았
+
+	  composition 결과물에서 불필요한 노이즈(자소열, 자모만, 종성 글자 등등)는 제거한다.
+
+
+  - Tagger
+    - korfinaluni.fst
+	  형태소 분석용 FST를 inverse한 FST와 와 unigram FST를 composition한 FST 
+	- korinvert.sym
+	  kyfd의 input symbol 정의
+	- worduniprob.sym
+	  kyfd의 output symbol 정의
+	  openfst 포맷이다.
+	- koreanuni.xml 
+	  kyfd를 사용하기 위한 설정파일
+	- kyfd
+	  컴파일된 바이너리인데, 별도로 소스를 다운받아서 설치해서 사용하는 것이 좋다.
   ```
 
 - Rouzeta 설치시 필요한 패키지
@@ -76,16 +185,14 @@ apply up> 형태소분석은
 ....
 ```
 
-- 형태소분석용 FST를 저장
+- 형태소분석용 FST를 save & load
 ```
-$ cd KFST/Rouzeta
-$ vi kormoran.script
-# 아래와 같이 주석을 제거한다.
-save stack kor.stack;				! 만들어진 FST를 binary로 저장하는 방법
-write att > "kor.fomaatt";			! att 형식으로 파일을 저장하는 방법
-invert net;							! 표층형 -> 어휘형으로 바뀌기 위한 방법
-write att > "korinvert.fomaatt";	! 바뀌어진 FST를 att형식으로 저장하는 방법
-$ foma -f kormoran.script
+foma[1]: save stack kor.stack
+foma[1]: quit
+$ foma
+foma[0]: load stack kor.stack
+foma[1]: up
+apply up>
 ```
 
 - 태깅
