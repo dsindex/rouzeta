@@ -2,7 +2,39 @@ rouzeta
 ===
 
 - 설명
-  - FST에 기반한 형태소 분석기 [Rouzeta](https://shleekr.github.io/)의 사용법
+  - FST에 기반한 한국어 형태소 분석기 [Rouzeta](https://shleekr.github.io/)의 사용법
+
+- Rouzeta 설치시 필요한 패키지
+  - [foma](https://code.google.com/archive/p/foma/)
+  ```
+  * stack full을 피하기 위해서, int_stack.c를 수정하고 다시 컴파일해야함.
+  $ cd foma-0.9.18
+  $ vi int_stack.c
+  ...
+  #define MAX_STACK 2097152*10
+  #define MAX_PTR_STACK 2097152*10
+
+  static int a[MAX_STACK];
+  static int top = -1;
+  ...
+  $ make ; sudo make install
+  ```
+  - [xerces-c](http://xerces.apache.org/xerces-c/download.cgi)
+  ```
+  $ cd xerces-c-3.1.4
+  $ ./configure ; make ; sudo make install
+  ```
+  - [OpenFST](http://www.openfst.org/twiki/bin/view/FST/WebHome)
+  ```
+  * <주의> 최신 버전으로 하면, kyfd 컴파일시 오류가 발생한다.
+  $ openfst-1.3.2
+  $ ./configure ; make ; sudo make install
+  ```
+  - [kyfd](http://www.phontron.com/kyfd/)
+  ```
+  $ cd kyfd-0.0.5
+  $ ./configure ; make ; sudo make install
+  ```
 
 - Rouzeta 다운로드 & 소스 설명
   - [rouzeta](https://shleekr.github.io/public/data/rouzeta.tar.gz)
@@ -80,36 +112,43 @@ rouzeta
 	  morphrules.foma의 변환규칙을 적용한 다음, 이 결과를 다시 음절단위로 변환하는
 	  FST를 구성한다.
 
-	  korean.lexc에 있는 아래 두 엔트리에 대해서 설명하면, 
+	  korean.lexc에 있는 아래 엔트리에 대해서 설명하면 아래와 같다.
 
 	  LEXICON vbNext
 	    ...
 		epLexicon
 		...
+	  LEXICON epLexicon
+	    ...
+		efLexicon
+
       깨닫/irrd/vb	vbNext ; ! vbLexicon, 동사
       았/ep	epNext ; ! epLexicon, 선어말어미
+	  다/ef efNext ; ! efLexicon, 어말어미
 
-	  vbLexicon                         epLexicon
-	  {ㄲ ㅐ ㄷ ㅏ %_ㄷ /irrd /vb}  ->  {ㅇ ㅏ %_ㅆ /ep}
+	  vbLexicon                         epLexicon             efLexicon
+	  --------------------------------------------------------------------
+	  {ㄲ ㅐ ㄷ ㅏ %_ㄷ /irrd /vb}  ->  {ㅇ ㅏ %_ㅆ /ep}  ->  {ㄷ ㅏ /ef}
 
 	  Lexicon 네트웍을 구성하면 vbLexicon의 모든 엔트리와 epLexicon의 모든 엔트리의 연결이 생성되어 있을 것이고
+	  epLexicon과 efLexicon도 마찬가지다. 
 	  여기서 음절을 자소로 분리한다음 IrrConjD 규칙을 적용하면
 
-	  ㄲ ㅐ ㄷ ㅏ %_ㄷ /irrd /vb ㅇ ㅏ %_ㅆ /ep
+	  ㄲ ㅐ ㄷ ㅏ %_ㄷ /irrd /vb ㅇ ㅏ %_ㅆ /ep ㄷ ㅏ /ef
 	  => 
-	  ㄲ ㅐ ㄷ ㅏ %_ㄹ /irrd /vb ㅇ ㅏ %_ㅆ /ep
+	  ㄲ ㅐ ㄷ ㅏ %_ㄹ /irrd /vb ㅇ ㅏ %_ㅆ /ep ㄷ ㅏ /ef
 
 	  이 결과에서 '품사/불규칙 태그'등을 삭제해야 다시 자소를 음절로 바꿀 수 있으므로, 삭제하면
 
-	  ㄲ ㅐ ㄷ ㅏ %_ㄹ /irrd /vb ㅇ ㅏ %_ㅆ /ep
+	  ㄲ ㅐ ㄷ ㅏ %_ㄹ /irrd /vb ㅇ ㅏ %_ㅆ /ep ㄷ ㅏ /ef
 	  =>
-	  ㄲ ㅐ ㄷ ㅏ %_ㄹ ㅇ ㅏ %_ㅆ
+	  ㄲ ㅐ ㄷ ㅏ %_ㄹ ㅇ ㅏ %_ㅆ ㄷ ㅏ
 
 	  이것을 다시 음절단위로 변환하자.
 
-	  ㄲ ㅐ ㄷ ㅏ %_ㄹ ㅇ ㅏ %_ㅆ
+	  ㄲ ㅐ ㄷ ㅏ %_ㄹ ㅇ ㅏ %_ㅆ ㄷ ㅏ
 	  =>
-	  깨달았
+	  깨달았다
 
 	  composition 결과물에서 불필요한 노이즈(자소열, 자모만, 종성 글자 등등)는 제거한다.
 
@@ -126,38 +165,6 @@ rouzeta
 	  kyfd를 사용하기 위한 설정파일
 	- kyfd
 	  컴파일된 바이너리인데, 별도로 소스를 다운받아서 설치해서 사용하는 것이 좋다.
-  ```
-
-- Rouzeta 설치시 필요한 패키지
-  - [foma](https://code.google.com/archive/p/foma/)
-  ```
-  * stack full을 피하기 위해서, int_stack.c를 수정하고 다시 컴파일해야함.
-  $ cd foma-0.9.18
-  $ vi int_stack.c
-  ...
-  #define MAX_STACK 2097152*10
-  #define MAX_PTR_STACK 2097152*10
-
-  static int a[MAX_STACK];
-  static int top = -1;
-  ...
-  $ make ; sudo make install
-  ```
-  - [xerces-c](http://xerces.apache.org/xerces-c/download.cgi)
-  ```
-  $ cd xerces-c-3.1.4
-  $ ./configure ; make ; sudo make install
-  ```
-  - [OpenFST](http://www.openfst.org/twiki/bin/view/FST/WebHome)
-  ```
-  * <주의> 최신 버전으로 하면, kyfd 컴파일시 오류가 발생한다.
-  $ openfst-1.3.2
-  $ ./configure ; make ; sudo make install
-  ```
-  - [kyfd](http://www.phontron.com/kyfd/)
-  ```
-  $ cd kyfd-0.0.5
-  $ ./configure ; make ; sudo make install
   ```
 
 - 형태소분석
@@ -187,13 +194,28 @@ apply up> 형태소분석은
 
 - 형태소분석용 FST를 save & load
 ```
+$ foma
 foma[1]: save stack kor.stack
 foma[1]: quit
 $ foma
 foma[0]: load stack kor.stack
 foma[1]: up
-apply up>
+apply up> 형태소분석은
+...
 ```
+
+- 커맨드라인에서 형태소 분석
+```
+$ flookup kor.stack
+형태소분석은
+형태소분석은   	형/nc태/nc소/nc분/nc석/nc은/nc
+형태소분석은   	형/nc태/nc소/nc분/nc석/nc은/pt
+형태소분석은   	형/nc태/nc소/nc분/nc석/nd은/nc
+형태소분석은   	형/nc태/nc소/nc분/nc석/nd은/nr
+....
+```
+
+- `SingleWordPhrase` 규칙을 보면 알겠지만, Rouzeta FST는 입력이 어휘형(자소단위,기호 등등)이고 출력이 표층형(어절 등)이다. 그런데, 형태소분석기는 이를 역으로 처리하는 프로그램이므로 실제 사용시에는 inverse 연산으로 FST를 뒤집어서 사용해야한다.
 
 - 태깅
 ```
