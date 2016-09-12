@@ -215,14 +215,14 @@ $ flookup kor.stack
 ....
 ```
 
-- `SingleWordPhrase` 규칙을 보면 알겠지만, Rouzeta FST는 입력이 어휘형(자소단위,기호 등등)이고 출력이 표층형(어절 등)이다. 그런데, 형태소분석기는 이를 역으로 처리하는 프로그램이므로 실제 사용시에는 inverse 연산으로 FST를 뒤집어서 사용해야한다.
+- `SingleWordPhrase` 규칙을 보면 알겠지만, Rouzeta FST는 입력이 어휘형(자소단위,기호 등등)이고 출력이 표층형(어절 등)이다. 그런데, 형태소분석기는 이를 역으로 처리하는 프로그램이므로 실제 사용시에는 inverse 연산으로 FST를 뒤집어서 사용해야한다. `korfinaluni.fst` FST binary 파일은 이와 같이 inverse 연산한 결과와 unigram FTS를 composition한 결과물이다.
 
 - 태깅
 ```
 $ cd KFST/Tagger
-# 직접 설치한 kyfd를 사용한다.
+# 시스템에 설치한 kyfd를 사용한다.
 $ rm kyfd
-$ cat testme.txt | ./kyfd koreanuni.xml
+$ cat testme.txt | kyfd koreanuni.xml
 --------------------------
 -- Started Kyfd Decoder --
 --------------------------
@@ -245,3 +245,8 @@ Decoding...
 .향 약 /nc 은 /pt <space> 향 촌 /nc 의 /pd <space> 교 육 /nc 과 /pc <space> 경 제 /nc 를 /po <space> 관 장 /nc 해 /nc <space> 서 원 /nc 을 /po <space> 운 영 /na 하 /xv 면 서 /ef <space> 중 앙 /nc <space> 정 부 /nc <space> 등 용 문 /nc 인 /nc <space> 대 과 /nc <space> 응 시 자 격 /nc 을 /po <space> 부 여 /na 하 /xv 는 /ed <space> 향 시 /nc 를 /po <space> 주 관 /nc 하 고 /pq <space> 흉 년 /nc 이 /ps <space> 들 /vb 면 /ex <space> 곡 식 /nc 을 /po <space> 나 누 /vb 는 /ed <space> 상 호 부 조 /nc 와 /pc <space> 작 황 /nc 에 /pa <space> 따 르 /vb _ㄴ /ed <space> 소 작 료 /nc <space> 연 동 적 용 /nc 을 /po <space> 정 하 /vb 는 가 /ef <space> 하 /vb 면 /ex <space> 풍 속 사 범 /nc 에 /pa <space> 대 하 /vb 어 /ex <space> 형 벌 /nc 을 /po <space> 가 하 /vb 는 /ed <space> 사 법 부 /nc <space> 역 할 /nc 까 지 /px <space> 담 당 /na 하 /xv 었 었 /ep 다 /ef . /sf
 . Done decoding, took 0 seconds
 ```
+
+- 입력 문자열을 linear FST로 만들고 이것과 Tagger FST(`korfinaluni.fst`)을 composition한 다음, begin -> end까지 shortest path를 찾으면, 그 path가 바로 tagging 결과가 된다. 그런데, 이런 과정을 라이브러리로 구성해둔 kyfd가 있으므로 이 소스를 뜯어서 수정하면 좀더 사용하기 편한 API를 만들 수 있을 것 같다. 
+  - FST의 shortest path를 이용해서 edit distance를 계산할수도 있는데, 아래 포스트를 참조하자.
+    - http://tylerpalsulich.com/post/levenshtein-edit-distance-with-fsts/
+	- https://github.com/dsindex/openfst
