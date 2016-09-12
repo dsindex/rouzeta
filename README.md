@@ -81,10 +81,10 @@ apply up> 형태소분석은
 $ cd KFST/Rouzeta
 $ vi kormoran.script
 # 아래와 같이 주석을 제거한다.
-save stack kor.stack				! 만들어진 FST를 binary로 저장하는 방법
-write att > "kor.fomaatt"			! att 형식으로 파일을 저장하는 방법
-invert net							! 표층형 -> 어휘형으로 바뀌기 위한 방법
-write att > "korinvert.fomaatt"	! 바뀌어진 FST를 att형식으로 저장하는 방법
+save stack kor.stack;				! 만들어진 FST를 binary로 저장하는 방법
+write att > "kor.fomaatt";			! att 형식으로 파일을 저장하는 방법
+invert net;							! 표층형 -> 어휘형으로 바뀌기 위한 방법
+write att > "korinvert.fomaatt";	! 바뀌어진 FST를 att형식으로 저장하는 방법
 $ foma -f kormoran.script
 ```
 
