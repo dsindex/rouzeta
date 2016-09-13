@@ -128,7 +128,7 @@ rouzeta
 
 	  vbLexicon                         epLexicon             efLexicon
 	  --------------------------------------------------------------------
-	  {ㄲ ㅐ ㄷ ㅏ %_ㄷ /irrd /vb}  ->  {ㅇ ㅏ %_ㅆ /ep}  ->  {ㄷ ㅏ /ef}
+	  {깨 닫 /irrd /vb}  ->  {았 /ep}  ->  {다 /ef}
 
 	  Lexicon 네트웍을 구성하면 vbLexicon의 모든 엔트리와 epLexicon의 모든 엔트리의 연결이 생성되어 있을 것이고
 	  epLexicon과 efLexicon도 마찬가지다. 
