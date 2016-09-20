@@ -309,8 +309,12 @@ string                                            n
 ```
 
 - 입력 문자열을 linear FST로 만들고 이것과 Tagger FST(`korfinaluni.fst`)을 composition한 다음, begin -> end까지 shortest path를 찾으면, 그 path가 바로 tagging 결과가 된다. 그런데, 이런 과정을 라이브러리로 구성해둔 kyfd가 있으므로 이 소스를 뜯어서 수정하면 좀더 사용하기 편한 API를 만들 수 있을 것 같다. 
-  - FST의 shortest path를 이용해서 edit distance를 계산할수도 있는데, 아래 포스트를 참조하자.
-    - http://tylerpalsulich.com/post/levenshtein-edit-distance-with-fsts/
+  - FST의 shortest path를 사용하는 방법은 아래 포스트를 참조하자.
 	- https://github.com/dsindex/openfst
   - [kyfd 튜토리얼](http://www.phontron.com/kyfd/tut1/)
-  ![lexicon](https://github.com/dsindex/rouzeta/blob/master/lexicon.png)
+    - lexicon FST 샘플
+	```
+	fstdraw --isymbols=char.sym --osymbols=word.sym --width=80.5 --height=110 lexicon.srt lexicon.dot
+	dot -Tpng lexicon.dot > lexicon.png
+	```
+    ![lexicon](https://github.com/dsindex/rouzeta/blob/master/lexicon.png)
