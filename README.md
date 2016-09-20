@@ -244,9 +244,10 @@ Decoding...
 . Done decoding, took 0 seconds
 ```
 
-- `SingleWordPhrase` 규칙을 보면 알겠지만, Rouzeta FST는 입력이 어휘형(자소단위,기호 등등)이고 출력이 표층형(어절 등)이다. 그런데, 형태소분석기는 이를 역으로 처리하는 프로그램이므로 실제 사용시에는 inverse 연산으로 FST를 뒤집어서 사용해야한다. `korfinaluni.fst` FST binary 파일은 이와 같이 inverse 연산한 결과와 unigram FTS를 composition한 결과물이다. 어떻게 생겼는지 직접 보려면 `fstprint`를 사용해서 출력해보면 된다. 
+- `SingleWordPhrase` 규칙을 보면 알겠지만, Rouzeta FST는 입력이 어휘형(자소단위,기호 등등)이고 출력이 표층형(어절 등)이다. 그런데, 형태소분석기는 이를 역으로 처리하는 프로그램이므로 실제 사용시에는 inverse 연산으로 FST를 뒤집어서 사용해야한다. `korfinaluni.fst` FST binary 파일은 이와 같이 inverse 연산한 결과와 unigram FST를 composition한 결과물이다. 어떻게 생겼는지 직접 보려면 `fstprint`를 사용해서 출력해보면 된다. 
 ```
 $ fstprint --isymbols=korinvert.sym --osymbols=worduniprob.sym korfinaluni.fst > korfinaluni.fst.txt
+* fst의 마지막 필드는 weight인데, unigram FST를 composition하면서 들어온 값이다. 
 $ more korfinaluni.fst.txt
 ...
 572     3373    <epsilon>       /nc     2.7578125
@@ -261,6 +262,50 @@ $ more korfinaluni.fst.txt
 574     13163   게      게      7.18847656
 574     13164   경      경      6.49609375
 ...
+133579	114136	길	기
+133579	114137	긴	기
+133579	114138	기	기
+...
+
+$ fstinfo korfinaluni.fst
+fst type                                          vector
+arc type                                          standard
+input symbol table                                none
+output symbol table                               none
+# of states                                       230911
+# of arcs                                         2993031
+initial state                                     0
+# of final states                                 509
+# of input/output epsilons                        0
+# of input epsilons                               209720
+# of output epsilons                              273
+# of accessible states                            230911
+# of coaccessible states                          230911
+# of connected states                             230911
+# of connected components                         1
+# of strongly conn components                     2
+input matcher                                     n
+output matcher                                    n
+input lookahead                                   n
+output lookahead                                  n
+expanded                                          y
+mutable                                           y
+error                                             n
+acceptor                                          n
+input deterministic                               n
+output deterministic                              n
+input/output epsilons                             n
+input epsilons                                    y
+output epsilons                                   y
+input label sorted                                n
+output label sorted                               n
+weighted                                          y
+cyclic                                            y
+cyclic at initial state                           n
+top sorted                                        n
+accessible                                        y
+coaccessible                                      y
+string                                            n
 ```
 
 - 입력 문자열을 linear FST로 만들고 이것과 Tagger FST(`korfinaluni.fst`)을 composition한 다음, begin -> end까지 shortest path를 찾으면, 그 path가 바로 tagging 결과가 된다. 그런데, 이런 과정을 라이브러리로 구성해둔 kyfd가 있으므로 이 소스를 뜯어서 수정하면 좀더 사용하기 편한 API를 만들 수 있을 것 같다. 
@@ -268,3 +313,4 @@ $ more korfinaluni.fst.txt
     - http://tylerpalsulich.com/post/levenshtein-edit-distance-with-fsts/
 	- https://github.com/dsindex/openfst
   - [kyfd 튜토리얼](http://www.phontron.com/kyfd/tut1/)
+  ![lexicon]()
