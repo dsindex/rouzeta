@@ -215,8 +215,6 @@ $ flookup kor.stack
 ....
 ```
 
-- `SingleWordPhrase` 규칙을 보면 알겠지만, Rouzeta FST는 입력이 어휘형(자소단위,기호 등등)이고 출력이 표층형(어절 등)이다. 그런데, 형태소분석기는 이를 역으로 처리하는 프로그램이므로 실제 사용시에는 inverse 연산으로 FST를 뒤집어서 사용해야한다. `korfinaluni.fst` FST binary 파일은 이와 같이 inverse 연산한 결과와 unigram FTS를 composition한 결과물이다.
-
 - 태깅
 ```
 $ cd KFST/Tagger
@@ -246,7 +244,28 @@ Decoding...
 . Done decoding, took 0 seconds
 ```
 
+- `SingleWordPhrase` 규칙을 보면 알겠지만, Rouzeta FST는 입력이 어휘형(자소단위,기호 등등)이고 출력이 표층형(어절 등)이다. 그런데, 형태소분석기는 이를 역으로 처리하는 프로그램이므로 실제 사용시에는 inverse 연산으로 FST를 뒤집어서 사용해야한다. `korfinaluni.fst` FST binary 파일은 이와 같이 inverse 연산한 결과와 unigram FTS를 composition한 결과물이다.
+```
+$ fstprint --isymbols=korinvert.sym --osymbols=worduniprob.sym korfinaluni.fst > korfinaluni.fst.txt
+$ more korfinaluni.fst.txt
+...
+572     3373    <epsilon>       /nc     2.7578125
+572     3375    <epsilon>       /nr     1.61328125
+573     4265    <epsilon>       /vb     6.78320312
+573     3378    <epsilon>       /nc     2.7578125
+573     3378    <epsilon>       /nr     1.61328125
+574     13160   ·       ·       7.18847656
+574     13161   가      가      4.54980469
+574     13162   간      간      6.78320312
+574     3696    거      거      6.27246094
+574     13163   게      게      7.18847656
+574     13164   경      경      6.49609375
+...
+```
+
 - 입력 문자열을 linear FST로 만들고 이것과 Tagger FST(`korfinaluni.fst`)을 composition한 다음, begin -> end까지 shortest path를 찾으면, 그 path가 바로 tagging 결과가 된다. 그런데, 이런 과정을 라이브러리로 구성해둔 kyfd가 있으므로 이 소스를 뜯어서 수정하면 좀더 사용하기 편한 API를 만들 수 있을 것 같다. 
   - FST의 shortest path를 이용해서 edit distance를 계산할수도 있는데, 아래 포스트를 참조하자.
     - http://tylerpalsulich.com/post/levenshtein-edit-distance-with-fsts/
 	- https://github.com/dsindex/openfst
+
+- kyfd
