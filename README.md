@@ -24,7 +24,7 @@ rouzeta
   $ cd xerces-c-3.1.4
   $ ./configure ; make ; sudo make install
   ```
-  - [OpenFST](http://www.openfst.org/twiki/bin/view/FST/WebHome)
+  - [openfst](http://www.openfst.org/twiki/bin/view/FST/WebHome)
   ```
   * <주의> 최신 버전으로 하면, kyfd 컴파일시 오류가 발생한다.
   $ openfst-1.3.2
