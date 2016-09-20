@@ -112,7 +112,7 @@ rouzeta
 	  morphrules.foma의 변환규칙을 적용한 다음, 이 결과를 다시 음절단위로 변환하는
 	  FST를 구성한다.
 
-	  korean.lexc에 있는 아래 엔트리에 대해서 설명하면 아래와 같다.
+	  korean.lexc에 있는 엔트리를 가지고 설명하면 아래와 같다.
 
 	  LEXICON vbNext
 	    ...
@@ -126,9 +126,9 @@ rouzeta
       았/ep	epNext ; ! epLexicon, 선어말어미
 	  다/ef efNext ; ! efLexicon, 어말어미
 
-	  vbLexicon                         epLexicon             efLexicon
-	  --------------------------------------------------------------------
-	  {ㄲ ㅐ ㄷ ㅏ %_ㄷ /irrd /vb}  ->  {ㅇ ㅏ %_ㅆ /ep}  ->  {ㄷ ㅏ /ef}
+	  vbLexicon             epLexicon    efLexicon
+	  ---------------------------------------------
+	  {깨 닫 /irrd /vb}  ->  {았 /ep}  ->  {다 /ef}
 
 	  Lexicon 네트웍을 구성하면 vbLexicon의 모든 엔트리와 epLexicon의 모든 엔트리의 연결이 생성되어 있을 것이고
 	  epLexicon과 efLexicon도 마찬가지다. 
@@ -148,7 +148,7 @@ rouzeta
 
 	  ㄲ ㅐ ㄷ ㅏ %_ㄹ ㅇ ㅏ %_ㅆ ㄷ ㅏ
 	  =>
-	  깨달았다
+	  깨 달 았 다
 
 	  composition 결과물에서 불필요한 노이즈(자소열, 자모만, 종성 글자 등등)는 제거한다.
 
@@ -170,7 +170,7 @@ rouzeta
 - 형태소분석
 ```
 $ cd KFST/Rouzeta
-$ forma
+$ foma
 foma[0]: source kormoran.script
 ....
 defined AlternationRules: 26.7 MB. 360257 states, 1750440 arcs, Cyclic.
@@ -194,7 +194,7 @@ apply up> 형태소분석은
 
 - 형태소분석용 FST를 save & load
 ```
-$ foma
+...
 foma[1]: save stack kor.stack
 foma[1]: quit
 $ foma
@@ -244,7 +244,7 @@ Decoding...
 . Done decoding, took 0 seconds
 ```
 
-- `SingleWordPhrase` 규칙을 보면 알겠지만, Rouzeta FST는 입력이 어휘형(자소단위,기호 등등)이고 출력이 표층형(어절 등)이다. 그런데, 형태소분석기는 이를 역으로 처리하는 프로그램이므로 실제 사용시에는 inverse 연산으로 FST를 뒤집어서 사용해야한다. `korfinaluni.fst` FST binary 파일은 이와 같이 inverse 연산한 결과와 unigram FTS를 composition한 결과물이다.
+- `SingleWordPhrase` 규칙을 보면 알겠지만, Rouzeta FST는 입력이 어휘형(자소단위,기호 등등)이고 출력이 표층형(어절 등)이다. 그런데, 형태소분석기는 이를 역으로 처리하는 프로그램이므로 실제 사용시에는 inverse 연산으로 FST를 뒤집어서 사용해야한다. `korfinaluni.fst` FST binary 파일은 이와 같이 inverse 연산한 결과와 unigram FTS를 composition한 결과물이다. 어떻게 생겼는지 직접 보려면 `fstprint`를 사용해서 출력해보면 된다. 
 ```
 $ fstprint --isymbols=korinvert.sym --osymbols=worduniprob.sym korfinaluni.fst > korfinaluni.fst.txt
 $ more korfinaluni.fst.txt
@@ -267,5 +267,4 @@ $ more korfinaluni.fst.txt
   - FST의 shortest path를 이용해서 edit distance를 계산할수도 있는데, 아래 포스트를 참조하자.
     - http://tylerpalsulich.com/post/levenshtein-edit-distance-with-fsts/
 	- https://github.com/dsindex/openfst
-
-- kyfd
+  - [kyfd 튜토리얼](http://www.phontron.com/kyfd/tut1/)
