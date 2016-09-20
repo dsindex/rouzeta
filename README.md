@@ -313,4 +313,4 @@ string                                            n
     - http://tylerpalsulich.com/post/levenshtein-edit-distance-with-fsts/
 	- https://github.com/dsindex/openfst
   - [kyfd 튜토리얼](http://www.phontron.com/kyfd/tut1/)
-  ![lexicon]()
+  ![lexicon](https://github.com/dsindex/rouzeta/blob/master/lexicon.png)
