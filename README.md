@@ -274,38 +274,7 @@ input symbol table                                none
 output symbol table                               none
 # of states                                       230911
 # of arcs                                         2993031
-initial state                                     0
-# of final states                                 509
-# of input/output epsilons                        0
-# of input epsilons                               209720
-# of output epsilons                              273
-# of accessible states                            230911
-# of coaccessible states                          230911
-# of connected states                             230911
-# of connected components                         1
-# of strongly conn components                     2
-input matcher                                     n
-output matcher                                    n
-input lookahead                                   n
-output lookahead                                  n
-expanded                                          y
-mutable                                           y
-error                                             n
-acceptor                                          n
-input deterministic                               n
-output deterministic                              n
-input/output epsilons                             n
-input epsilons                                    y
-output epsilons                                   y
-input label sorted                                n
-output label sorted                               n
-weighted                                          y
-cyclic                                            y
-cyclic at initial state                           n
-top sorted                                        n
-accessible                                        y
-coaccessible                                      y
-string                                            n
+...
 ```
 
 - 입력 문자열을 linear FST로 만들고 이것과 Tagger FST(`korfinaluni.fst`)을 composition한 다음, begin -> end까지 shortest path를 찾으면, 그 path가 바로 tagging 결과가 된다. 그런데, 이런 과정을 라이브러리로 구성해둔 kyfd가 있으므로 이 소스를 뜯어서 수정하면 좀더 사용하기 편한 API를 만들 수 있을 것 같다. 
@@ -314,7 +283,7 @@ string                                            n
   - [kyfd 튜토리얼](http://www.phontron.com/kyfd/tut1/)
     - lexicon FST 샘플
 	```
-	fstdraw --isymbols=char.sym --osymbols=word.sym --width=80.5 --height=110 lexicon.srt lexicon.dot
-	dot -Tpng lexicon.dot > lexicon.png
+	$ fstdraw --isymbols=char.sym --osymbols=word.sym --width=200 --height=300 lexicon.srt lexicon.dot
+	$ dot -Tpng lexicon.dot > lexicon.png
 	```
     ![lexicon](https://github.com/dsindex/rouzeta/blob/master/lexicon.png)
