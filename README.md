@@ -308,10 +308,11 @@ $ fstcompose korfinal.fst uni.fst > korfinaluni.fst
   - FST의 shortest path를 사용하는 방법은 아래 포스트를 참조하자.
 	- https://github.com/dsindex/openfst
   - [kyfd 튜토리얼](http://www.phontron.com/kyfd/tut1/)
-    - 이 튜토리얼을 읽어보면 FST를 어떻게 만들고 사용해야할지 감이 생길것이다. 
-    - [lexicon FST png 파일](https://github.com/dsindex/rouzeta/blob/master/lexicon.png)
+    - 이 튜토리얼을 읽고 실행시켜보면 FST를 어떻게 만들고 사용해야할지 감이 생길것이다. 
+    - <참고>
 	```
-    # 적당한 규모의 lexicon FST라도 그래프로 그리면 매우 크기 때문에, width, height도 크게 잡는다.   
+    # 적당한 규모의 lexicon FST라도 그래프로 그리면 매우 크다. 
+    # 만약, lexicon FST 파일을 이미지로 보고싶다면 width, height도 크게 잡아서 실행시켜야한다.
 	$ fstdraw --isymbols=char.sym --osymbols=word.sym --width=200 --height=300 lexicon.srt lexicon.dot
 	$ dot -Tpng lexicon.dot > lexicon.png
 	```
