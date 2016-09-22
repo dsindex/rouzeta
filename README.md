@@ -316,3 +316,5 @@ $ fstcompose korfinal.fst uni.fst > korfinaluni.fst
 	$ fstdraw --isymbols=char.sym --osymbols=word.sym --width=200 --height=300 lexicon.srt lexicon.dot
 	$ dot -Tpng lexicon.dot > lexicon.png
 	```
+  - kyfd를 fork해서 사용하기 편하게 수정한 버전, https://github.com/dsindex/kyfd
+  - 이것을 가지고 c, python interface를 개발중,  https://github.com/dsindex/ckyfd
