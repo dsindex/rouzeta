@@ -1,6 +1,7 @@
 rouzeta
 ===
 
+### Rouzeta
 - 설명
   - FST에 기반한 한국어 형태소 분석기 [Rouzeta](https://shleekr.github.io/)의 사용법
 
@@ -155,16 +156,16 @@ rouzeta
 
   - Tagger
     - korfinaluni.fst
-	  형태소 분석용 FST를 inverse한 FST와 와 unigram FST를 composition한 FST 
+	  형태소 분석용 FST를 inverse한 FST와 와 unigram FST를 composition한 FST
+	  (openfst를 사용해서 빌드한 결과)
 	- korinvert.sym
 	  kyfd의 input symbol 정의
 	- worduniprob.sym
 	  kyfd의 output symbol 정의
-	  openfst 포맷이다.
 	- koreanuni.xml 
 	  kyfd를 사용하기 위한 설정파일
 	- kyfd
-	  컴파일된 바이너리인데, 별도로 소스를 다운받아서 설치해서 사용하는 것이 좋다.
+	  컴파일된 바이너리인데, 별도로 소스를 다운받고 설치해서 사용하자.
   ```
 
 - 형태소분석
@@ -304,17 +305,20 @@ $ more korinvert.fomaatt
 $ fstcompose korfinal.fst uni.fst > korfinaluni.fst
 ```
 
-- 입력 문자열을 linear FST로 만들고 이것과 Tagger FST(`korfinaluni.fst`)을 composition한 다음, begin -> end까지 shortest path를 찾으면, 그 path가 바로 tagging 결과가 된다. 그런데, 이런 과정을 라이브러리로 구성해둔 kyfd가 있으므로 이 소스를 뜯어서 수정하면 좀더 사용하기 편한 API를 만들 수 있을 것 같다. 
-  - FST의 shortest path를 사용하는 방법은 아래 포스트를 참조하자.
+### Kyfd, Foma
+- 입력 문자열을 linear FST로 만들고 이것과 Tagger FST(`korfinaluni.fst`)을 composition한 다음, begin -> end까지 shortest path를 찾으면, 그 path가 바로 tagging 결과가 된다. 이런 과정을 라이브러리로 구성해둔 decoder가 kyfd이다.  이 소스를 수정하면 좀더 편리한 API를 만들 수 있을 것 같다. 
+  - FST의 shortest path를 사용하는 방법은 아래 포스트의 `edit_distance.sh`을 참조하자.
 	- https://github.com/dsindex/openfst
   - [kyfd 튜토리얼](http://www.phontron.com/kyfd/tut1/)
-    - 이 튜토리얼을 읽고 실행시켜보면 FST를 어떻게 만들고 사용해야할지 감이 생길것이다. 
-    - <참고>
+    - 사전파일을 FST로 구성해두고, 공백으로 구분된 문자열이 들어오면 단어형태로 재구성하는 예제
 	```
-    # 적당한 규모의 lexicon FST라도 그래프로 그리면 매우 크다. 
-    # 만약, lexicon FST 파일을 이미지로 보고싶다면 width, height도 크게 잡아서 실행시켜야한다.
-	$ fstdraw --isymbols=char.sym --osymbols=word.sym --width=200 --height=300 lexicon.srt lexicon.dot
-	$ dot -Tpng lexicon.dot > lexicon.png
+	e n g l i s h i s a w e s t g e r m a n i c l a n g u a g e t h a t d e v e l o p e d i n e n g l a n d d u r i n g t h e a n g l o - s a x o n e r a .
+	->
+	english is a west germanic language that developed in england during the anglo-saxon era .
 	```
-  - kyfd를 fork해서 사용하기 편하게 수정한 버전, https://github.com/dsindex/kyfd
-  - 이것을 가지고 c, python interface를 개발중,  https://github.com/dsindex/ckyfd
+  - kyfd를 fork해서 사용하기 편하게 수정한 버전, [kyfd](https://github.com/dsindex/kyfd)
+  - 이것을 가지고 c, python interface를 개발중,  [ckyfd](https://github.com/dsindex/ckyfd)
+
+- 영어에서 foma를 이용한 형태소분석기 만들기, [morpological analysis with FSTs](http://foma.sourceforge.net/dokuwiki/doku.php?id=wiki:morphtutorial)
+  - 이것을 읽어 보면, Rouzeta에 있는 korean.lexc, morphrules.foma, kormoran.script 등을 더 잘 이해할 수 있을 것이다. 
+
