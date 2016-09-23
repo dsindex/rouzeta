@@ -1,6 +1,3 @@
-rouzeta
-===
-
 ### Rouzeta
 - 설명
   - FST에 기반한 한국어 형태소 분석기 [Rouzeta](https://shleekr.github.io/)의 사용법
