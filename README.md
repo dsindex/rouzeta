@@ -315,6 +315,34 @@ $ fstcompose korfinal.fst uni.fst > korfinaluni.fst
 	```
   - kyfd를 fork해서 사용하기 편하게 수정한 버전, [kyfd](https://github.com/dsindex/kyfd)
   - 이것을 가지고 c, python interface를 개발,  [ckyfd](https://github.com/dsindex/ckyfd)
+    - 형태소 분석결과를 정리해서 볼 수 있다.
+	```
+    $ python test_rouzeta.py -c koreanuni.xml
+    Loading fst korfinaluni.fst...
+    나는 학교에서 공부합니다.
+    0	나는
+    1	학교에서
+    2	공부합니다.
+    나	/np	None	0	0
+    는	/pt	None	0	1
+    학교	/nc	None	1	2
+    에서	/pa	None	1	3
+    공부	/na	None	2	4
+    하	/xv	None	2	5
+    _ㅂ니다	/ef	None	2	6
+    .	/sf	None	2	7
+    나는 답을 몰라.
+    0	나는
+    1	답을
+    2	몰라.
+    나	/np	None	0	0
+    는	/pt	None	0	1
+    답	/nc	None	1	2
+    을	/po	None	1	3
+    모르	/vb	/irrl	2	4
+    아	/ec	None	2	5
+    .	/sf	None	2	6
+	```
 
 - 영어에서 foma를 이용한 형태소분석기 만들기, [morpological analysis with FSTs](http://foma.sourceforge.net/dokuwiki/doku.php?id=wiki:morphtutorial)
   - 이것을 읽어 보면, Rouzeta에 있는 korean.lexc, morphrules.foma, kormoran.script 등을 더 잘 이해할 수 있을 것이다. 
