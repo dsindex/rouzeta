@@ -314,7 +314,7 @@ $ fstcompose korfinal.fst uni.fst > korfinaluni.fst
 	english is a west germanic language that developed in england during the anglo-saxon era .
 	```
   - kyfd를 fork해서 사용하기 편하게 수정한 버전, [kyfd](https://github.com/dsindex/kyfd)
-  - 이것을 가지고 c, python interface를 개발중,  [ckyfd](https://github.com/dsindex/ckyfd)
+  - 이것을 가지고 c, python interface를 개발,  [ckyfd](https://github.com/dsindex/ckyfd)
 
 - 영어에서 foma를 이용한 형태소분석기 만들기, [morpological analysis with FSTs](http://foma.sourceforge.net/dokuwiki/doku.php?id=wiki:morphtutorial)
   - 이것을 읽어 보면, Rouzeta에 있는 korean.lexc, morphrules.foma, kormoran.script 등을 더 잘 이해할 수 있을 것이다. 
