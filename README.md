@@ -304,8 +304,6 @@ $ fstcompose korfinal.fst uni.fst > korfinaluni.fst
 
 ### Kyfd, Foma
 - 입력 문자열을 linear FST로 만들고 이것과 Tagger FST(`korfinaluni.fst`)을 composition한 다음, begin -> end까지 shortest path를 찾으면, 그 path가 바로 tagging 결과가 된다. 이런 과정을 라이브러리로 구성해둔 decoder가 kyfd이다.  이 소스를 수정하면 좀더 편리한 API를 만들 수 있을 것 같다. 
-  - FST의 shortest path를 사용하는 방법은 아래 포스트의 `edit_distance.sh`을 참조하자.
-	- https://github.com/dsindex/openfst
   - [kyfd 튜토리얼](http://www.phontron.com/kyfd/tut1/)
     - 사전파일을 FST로 구성해두고, 공백으로 구분된 문자열이 들어오면 단어형태로 재구성하는 예제
 	```
@@ -317,6 +315,7 @@ $ fstcompose korfinal.fst uni.fst > korfinaluni.fst
   - 이것을 가지고 c, python interface를 개발,  [ckyfd](https://github.com/dsindex/ckyfd)
     - 형태소 분석결과를 정리해서 볼 수 있다.
 	```
+	$ cd ckyfd/wrapper/python
     $ python test_rouzeta.py -c koreanuni.xml
     Loading fst korfinaluni.fst...
     나는 학교에서 공부합니다.
@@ -343,7 +342,20 @@ $ fstcompose korfinal.fst uni.fst > korfinaluni.fst
     아	/ec	None	2	5
     .	/sf	None	2	6
 	```
-
+    - fst를 이용해서 띄어쓰기 모델을 만들 수도 있다. 
+	```
+    $ cd ckyfd/script
+	$ ./autospacer_fst.sh train.txt -v -v
+    # 이것은 띄어쓰기 모델을 만들고, 
+    # 예를 들면 아래와 같이 적용해준다. 
+    # © News1 <쥐띠> 과로와 과음을 하게 되면 후유증이 심하게 가는 날.
+    # -> encoding(input to fst)
+    # © n e w s 1 < 쥐 띠 > 과 로 와 과 음 을 하 게 되 면 후 유 증 이 심 하 게 가 는 날 .
+    # -> decoding(output from fst)
+    # © <w> n e w s 1 <w> < 쥐 띠 > <w> 과 로 와 <w> 과 <w> 음 을 <w> 하 게 <w> 되 면 <w> 후 유 증 이 <w> 심 하 게 <w> 가 는 <w> 날 .
+    # -> recovering
+    # © news1 <쥐띠> 과로와 과 음을 하게 되면 후유증이 심하게 가는 날.
+	```
 - 영어에서 foma를 이용한 형태소분석기 만들기, [morpological analysis with FSTs](http://foma.sourceforge.net/dokuwiki/doku.php?id=wiki:morphtutorial)
   - 이것을 읽어 보면, Rouzeta에 있는 korean.lexc, morphrules.foma, kormoran.script 등을 더 잘 이해할 수 있을 것이다. 
 
