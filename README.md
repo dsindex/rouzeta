@@ -388,3 +388,26 @@ $ fstcompose korfinal.fst uni.fst > korfinaluni.fst
 - 영어에서 foma를 이용한 형태소분석기 만들기, [morpological analysis with FSTs](http://foma.sourceforge.net/dokuwiki/doku.php?id=wiki:morphtutorial)
   - 이것을 읽어 보면, Rouzeta에 있는 korean.lexc, morphrules.foma, kormoran.script 등을 더 잘 이해할 수 있을 것이다. 
 
+### Problems
+- 미등록어인 경우 path가 존재하지 않는 경우, 입력된 전체 문장이 분석되지 않게된다.
+```
+예) <space> 츠 카 <space> 그 룹 이 <space> 발 매 한 <space> ' 츠 카 <space> S ' <space> 라 는 <space> 이 름 의 <space> 실 버 폰 .
+
+여기서 '츠 카'가 사전에 존재하지 않는 단어이므로 path가 존재하지 않아서 분석이 실패하게 된다.
+만약 입력문장을 단어별로 분리해서 형태소분석하고 그 결과물들을 붙여서 태깅을 하는 구조라면
+중간에 어느 하나가 오분석되어도 큰 문제는 안될 것 같다. 하지만, 현재 모델에서는 one-path로 
+형태소분석과 태깅을 수행하기 때문에 이런 문제를 어떻게 제어해야할지 생각해봐야한다.
+```
+- unknown symbol 문제 
+```
+예) 가 벼 운 <space> 문 구 <space> 수 정 은 <space> 제 외 ) <space> ▲ <space> 기 본 <space> 질 문
+
+여기서 '▲'는 unknown symbol인데, kyfd에서 '-unknown <unk>' 지정해줘도 해당하는 id '2'가 할당되지 않는다. 
+소스코드 내부에서 강제로 '2'를 할당해준다고 해도, output symbol에 unknown symbol이 정의되어 있지 않아서
+'Unmatched number of unknown symbols in output' 오류가 발생한다.
+
+이 문제를 해결하려면 output symbol에도 <unk>이 정의되어 있어야 할것 같고
+kyfd 코드에서 '-unknown <unk>' 옵션을 읽어서 symbol table을 탐색하는 부분에서 발생하는
+오류도 수정해야할 것 같다. 
+```
+
