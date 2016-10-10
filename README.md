@@ -389,7 +389,7 @@ $ fstcompose korfinal.fst uni.fst > korfinaluni.fst
   - 이것을 읽어 보면, Rouzeta에 있는 korean.lexc, morphrules.foma, kormoran.script 등을 더 잘 이해할 수 있을 것이다. 
 
 ### Problems
-- 미등록어인 경우 path가 존재하지 않는 경우, 입력된 전체 문장이 분석되지 않게된다.
+- 미등록어
 ```
 예) <space> 츠 카 <space> 그 룹 이 <space> 발 매 한 <space> ' 츠 카 <space> S ' <space> 라 는 <space> 이 름 의 <space> 실 버 폰 .
 
@@ -398,7 +398,7 @@ $ fstcompose korfinal.fst uni.fst > korfinaluni.fst
 중간에 어느 하나가 오분석되어도 큰 문제는 안될 것 같다. 하지만, 현재 모델에서는 one-path로 
 형태소분석과 태깅을 수행하기 때문에 이런 문제를 어떻게 제어해야할지 생각해봐야한다.
 ```
-- unknown symbol 문제 
+- 미등록 심벌
 ```
 예) 가 벼 운 <space> 문 구 <space> 수 정 은 <space> 제 외 ) <space> ▲ <space> 기 본 <space> 질 문
 
@@ -409,5 +409,18 @@ $ fstcompose korfinal.fst uni.fst > korfinaluni.fst
 이 문제를 해결하려면 output symbol에도 <unk>이 정의되어 있어야 할것 같고
 kyfd 코드에서 '-unknown <unk>' 옵션을 읽어서 symbol table을 탐색하는 부분에서 발생하는
 오류도 수정해야할 것 같다. 
+```
+- 메모리 증가
+```
+kyfd에 보면 'reload' 옵션이 있는데, 예를 들어 '500'으로 설정하면 매 500 문장을 분석한 이후
+fst를 다시 로딩하게 된다. 이것은 입력을 fst로 만들어서 compose할때마다 메모리가 늘어나기 때문에, 
+적당한 시점에 이렇게 늘어난 메모리를 초기화 시켜주려고 만든 옵션인 것 같다.
+
+"Reload the model after a certain number of sentences. Can be used
+to flush the memory of expanded states for dynamically composed models 
+that become unmanagably large after a time."
+
+따라서 kyfd를 그대로 서비스에 사용하기에는 적합하지 않아보인다. 
+메모리가 늘어나지 않도록 수정하거나 별도의 fst decoding 모듈을 개발해야할 필요성이 있다.
 ```
 
