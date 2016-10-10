@@ -304,7 +304,7 @@ $ fstcompose korfinal.fst uni.fst > korfinaluni.fst
 
 - 바이그램 태거
   - [바이그램 한국어 품사 태거](https://shleekr.github.io/)
-  - 지금까지 언급한 태거는 유니그램 확률만을 사용했지만, 바이그램 태거는 생성확률과 전이확률을 이용한다. fst의 사이즈는 좀 많이 커지지만 태깅 정확률은 좋아진다.
+  - 지금까지 언급한 태거는 유니그램 확률만을 사용했지만, 바이그램 태거는 생성확률과 전이확률을 이용한다. fst의 사이즈는 좀 많이 커지지만(600M) 태깅 정확률은 좋아진다.
   - 사용법 
   ```
   # 앞서 기술한 유니그램 태거의 상용법과 동일하다.
@@ -313,6 +313,8 @@ $ fstcompose korfinal.fst uni.fst > korfinaluni.fst
   $ cat bitagger_aa bitagger_ab > bitaggerfile.tar.gz
   $ tar -zxvf bitaggerfile.tar.gz
   $ cd BiTagger/
+  $ ls .
+  koreanbi.xml  korinvert.sym  korinvertwordbifinal.fst  testme.txt  wordbiprob.sym
   # 시스템에 설치된 kyfd를 사용 
   $ rm kyfd
   $ cat testme.txt | kyfd koreanbi.xml
