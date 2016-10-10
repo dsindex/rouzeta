@@ -331,7 +331,7 @@ $ fstcompose korfinal.fst uni.fst > korfinaluni.fst
   ...
   ```
 
-### Kyfd, Foma
+### Kyfd
 - 입력 문자열을 linear FST로 만들고 이것과 Tagger FST(`korfinaluni.fst`)을 composition한 다음, begin -> end까지 shortest path를 찾으면, 그 path가 바로 tagging 결과가 된다. 이런 과정을 라이브러리로 구성해둔 decoder가 kyfd이다.  이 소스를 수정하면 좀더 편리한 API를 만들 수 있을 것 같다. 
   - [kyfd 튜토리얼](http://www.phontron.com/kyfd/tut1/)
     - 사전파일을 FST로 구성해두고, 공백으로 구분된 문자열이 들어오면 단어형태로 재구성하는 예제
@@ -385,6 +385,8 @@ $ fstcompose korfinal.fst uni.fst > korfinaluni.fst
     # -> recovering
     # © news1 <쥐띠> 과로와 과 음을 하게 되면 후유증이 심하게 가는 날.
 	```
+
+### Foma
 - 영어에서 foma를 이용한 형태소분석기 만들기, [morpological analysis with FSTs](http://foma.sourceforge.net/dokuwiki/doku.php?id=wiki:morphtutorial)
   - 이것을 읽어 보면, Rouzeta에 있는 korean.lexc, morphrules.foma, kormoran.script 등을 더 잘 이해할 수 있을 것이다. 
 
@@ -403,12 +405,18 @@ $ fstcompose korfinal.fst uni.fst > korfinaluni.fst
 예) 가 벼 운 <space> 문 구 <space> 수 정 은 <space> 제 외 ) <space> ▲ <space> 기 본 <space> 질 문
 
 여기서 '▲'는 unknown symbol인데, kyfd에서 '-unknown <unk>' 지정해줘도 해당하는 id '2'가 할당되지 않는다. 
-소스코드 내부에서 강제로 '2'를 할당해준다고 해도, output symbol에 unknown symbol이 정의되어 있지 않아서
-'Unmatched number of unknown symbols in output' 오류가 발생한다.
+소스코드 내부에서 강제로 '2'를 할당해주는 경우 아래와 같이 분석된다. 
 
-이 문제를 해결하려면 output symbol에도 <unk>이 정의되어 있어야 할것 같고
-kyfd 코드에서 '-unknown <unk>' 옵션을 읽어서 symbol table을 탐색하는 부분에서 발생하는
+가 볍 /irrb /vj _ㄴ /ed <space> 문 구 /nc <space> 수 정 /nc 은 /pt <space> 제 외 /nc ) /sr <space> " /sr <space> 기 본 /nc <space> 질 문 /nc
+
+▲ -> " /sr
+
+이렇게 이상하게 매핑된다는 것을 알 수 있다.
+
+아무튼 kyfd 코드에서 '-unknown <unk>' 옵션을 읽어서 symbol table을 탐색하는 부분에서 발생하는
 오류도 수정해야할 것 같다. 
+
+기타 unknown symbol때문에 문제가 생기는 부분은 더 찾아봐야할듯.
 ```
 - 메모리 증가
 ```
