@@ -305,6 +305,29 @@ $ fstcompose korfinal.fst uni.fst > korfinaluni.fst
 - 바이그램 태거
   - [바이그램 한국어 품사 태거](https://shleekr.github.io/)
   - 지금까지 언급한 태거는 유니그램 확률만을 사용했지만, 바이그램 태거는 생성확률과 전이확률을 이용한다. fst의 사이즈는 좀 많이 커지지만 태깅 정확률은 좋아진다.
+  - 사용법 
+  ```
+  # 앞서 기술한 유니그램 태거의 상용법과 동일하다.
+  $ curl -OL https://shleekr.github.io/public/data/bitagger_aa
+  $ curl -OL https://shleekr.github.io/public/data/bitagger_ab
+  $ cat bitagger_aa bitagger_ab > bitaggerfile.tar.gz
+  $ tar -zxvf bitaggerfile.tar.gz
+  $ cd BiTagger/
+  # 시스템에 설치된 kyfd를 사용 
+  $ rm kyfd
+  $ cat testme.txt | kyfd koreanbi.xml
+  --------------------------
+  -- Started Kyfd Decoder --
+  --------------------------
+  Loaded configuration, initializing decoder...
+  Loading fst korinvertwordbifinal.fst...
+  Done initializing, took 6 seconds
+  Decoding...
+  나 /np 는 /pt <space> 학 교 /nc 에 서 /pa <space> 공 부 /na 하 /xv _ㅂ 니 다 /ef . /sf
+  선 /nc 을 /po <space> 긋 /irrs /vb 어 /ex <space> 버 리 /vx 었 /ep 다 /ef . /sf
+  고 맙 /irrb /vj 었 /ep 다 /ef . /sf
+  ...
+  ```
 
 ### Kyfd, Foma
 - 입력 문자열을 linear FST로 만들고 이것과 Tagger FST(`korfinaluni.fst`)을 composition한 다음, begin -> end까지 shortest path를 찾으면, 그 path가 바로 tagging 결과가 된다. 이런 과정을 라이브러리로 구성해둔 decoder가 kyfd이다.  이 소스를 수정하면 좀더 편리한 API를 만들 수 있을 것 같다. 
