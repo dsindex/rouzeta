@@ -1,6 +1,6 @@
 ### Rouzeta
 - 설명
-  - FST에 기반한 한국어 형태소 분석기 [Rouzeta](https://shleekr.github.io/2016/06/30/introducing-rouzeta/)의 사용법
+  - FST에 기반한 한국어 형태소 분석기 [Rouzeta](https://shleekr.github.io/)의 사용법
 
 - Rouzeta 설치시 필요한 패키지
   - [foma](https://code.google.com/archive/p/foma/)
@@ -303,7 +303,7 @@ $ fstcompose korfinal.fst uni.fst > korfinaluni.fst
 ```
 
 - 바이그램 태거
-  - [바이그램 한국어 품사 태거](https://shleekr.github.io/2016/10/04/korean-bigram-tagger/)
+  - [바이그램 한국어 품사 태거](https://shleekr.github.io/)
   - 지금까지 언급한 태거는 유니그램 확률만을 사용했지만, 바이그램 태거는 생성확률과 전이확률을 이용한다. fst의 사이즈는 좀 많이 커지지만 태깅 정확률은 좋아진다.
 
 ### Kyfd, Foma
