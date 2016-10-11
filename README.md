@@ -374,10 +374,12 @@ $ fstcompose korfinal.fst uni.fst > korfinaluni.fst
 ```
 예) <space> 츠 카 <space> 그 룹 이 <space> 발 매 한 <space> ' 츠 카 <space> S ' <space> 라 는 <space> 이 름 의 <space> 실 버 폰 .
 
-여기서 '츠 카'가 사전에 존재하지 않는 단어이므로 path가 존재하지 않아서 분석이 실패하게 된다.
+여기서 '츠 카'가 사전에 존재하지 않는 단어이므로 path가 존재하지 않아서 분석이 실패한다.( WARNING, no path found )
 만약 입력문장을 단어별로 분리해서 형태소분석하고 그 결과물들을 붙여서 태깅을 하는 구조라면
 중간에 어느 하나가 오분석되어도 큰 문제는 안될 것 같다. 하지만, 현재 모델에서는 one-path로 
-형태소분석과 태깅을 수행하기 때문에 이런 문제를 어떻게 제어해야할지 생각해봐야한다.
+형태소분석과 태깅을 동시에 수행하기 때문에 이런 문제가 생긴다.
+현재 rouzeta는 이렇게 path를 찾지 못하는 경우가 매우 많기 때문에 어떤 방식으로 
+개선해야 할 지 생각해봐야할 것 같다.
 ```
 - 미등록 심벌
 ```
@@ -387,8 +389,8 @@ $ fstcompose korfinal.fst uni.fst > korfinaluni.fst
 
 가 볍 /irrb /vj _ㄴ /ed <space> 문 구 /nc <space> 수 정 /nc 은 /pt <space> 제 외 /nc ) /sr <space> 기 본 /nc <space> 질 문 /nc
 
-unknown을 지정하지 않거나, 분석대상 문자열에 존재하는 심벌로 지정한 경우는 오류가 발생한다.
 unknown을 '<epsilon>'로 지정했기 때문에, 미등록 심벌은 무조건 사라지게 된다. 
+unknown을 지정하지 않거나, 분석대상 문자열에 존재하는 심벌로 지정한 경우는 오류가 발생한다.
 
 정확하게 처리하려면 rouzeta에 '<unk>' 심벌을 추가할 필요가 있어 보인다.
 ```
