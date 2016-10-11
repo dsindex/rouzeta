@@ -333,13 +333,6 @@ $ fstcompose korfinal.fst uni.fst > korfinaluni.fst
 
 ### Kyfd
 - 입력 문자열을 linear FST로 만들고 이것과 Tagger FST(`korfinaluni.fst`)을 composition한 다음, begin -> end까지 shortest path를 찾으면, 그 path가 바로 tagging 결과가 된다. 이런 과정을 라이브러리로 구성해둔 decoder가 kyfd이다.  이 소스를 수정하면 좀더 편리한 API를 만들 수 있을 것 같다. 
-  - [kyfd 튜토리얼](http://www.phontron.com/kyfd/tut1/)
-    - 사전파일을 FST로 구성해두고, 공백으로 구분된 문자열이 들어오면 단어형태로 재구성하는 예제
-	```
-	e n g l i s h i s a w e s t g e r m a n i c l a n g u a g e t h a t d e v e l o p e d i n e n g l a n d d u r i n g t h e a n g l o - s a x o n e r a .
-	->
-	english is a west germanic language that developed in england during the anglo-saxon era .
-	```
   - kyfd를 fork해서 사용하기 편하게 수정한 버전, [kyfd](https://github.com/dsindex/kyfd)
   - 이것을 가지고 c, python interface를 개발,  [ckyfd](https://github.com/dsindex/ckyfd)
     - 형태소 분석결과를 정리해서 볼 수 있다.
@@ -371,20 +364,6 @@ $ fstcompose korfinal.fst uni.fst > korfinaluni.fst
     아	ec	None	EC	2	5
     .	sf	None	SF	2	6
 	```
-    - fst를 이용해서 띄어쓰기 모델을 만들 수도 있다. 
-	```
-    $ cd ckyfd/script
-	$ ./autospacer_fst.sh train.txt -v -v
-    # 이것은 띄어쓰기 모델을 만들고, 
-    # 예를 들면 아래와 같이 적용해준다. 
-    # © News1 <쥐띠> 과로와 과음을 하게 되면 후유증이 심하게 가는 날.
-    # -> encoding(input to fst)
-    # © n e w s 1 < 쥐 띠 > 과 로 와 과 음 을 하 게 되 면 후 유 증 이 심 하 게 가 는 날 .
-    # -> decoding(output from fst)
-    # © <w> n e w s 1 <w> < 쥐 띠 > <w> 과 로 와 <w> 과 <w> 음 을 <w> 하 게 <w> 되 면 <w> 후 유 증 이 <w> 심 하 게 <w> 가 는 <w> 날 .
-    # -> recovering
-    # © news1 <쥐띠> 과로와 과 음을 하게 되면 후유증이 심하게 가는 날.
-	```
 
 ### Foma
 - 영어에서 foma를 이용한 형태소분석기 만들기, [morpological analysis with FSTs](http://foma.sourceforge.net/dokuwiki/doku.php?id=wiki:morphtutorial)
@@ -404,17 +383,9 @@ $ fstcompose korfinal.fst uni.fst > korfinaluni.fst
 ```
 예) 가 벼 운 <space> 문 구 <space> 수 정 은 <space> 제 외 ) <space> ▲ <space> 기 본 <space> 질 문
 
-여기서 '▲'는 unknown symbol인데, kyfd에서 '-unknown <unk>' 지정해줘도 해당하는 id '2'가 할당되지 않는다. 
-소스코드 내부에서 강제로 '2'를 할당해주는 경우 아래와 같이 분석된다. 
+여기서 '▲'는 unknown symbol인데, kyfd에서 "-unknown '?'" 이렇게 지정해주면 아래와 같이 분석된다. 
 
-가 볍 /irrb /vj _ㄴ /ed <space> 문 구 /nc <space> 수 정 /nc 은 /pt <space> 제 외 /nc ) /sr <space> " /sr <space> 기 본 /nc <space> 질 문 /nc
-
-▲ -> " /sr
-
-이렇게 이상하게 매핑된다는 것을 알 수 있다.
-
-아무튼 kyfd 코드에서 '-unknown <unk>' 옵션을 읽어서 symbol table을 탐색하는 부분에서 발생하는
-오류도 수정해야할 것 같다. 
+unknown을 지정하지 않으면 오류가 발생한다. 
 
 기타 unknown symbol때문에 문제가 생기는 부분은 더 찾아봐야할듯.
 ```
