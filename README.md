@@ -369,7 +369,7 @@ $ fstcompose korfinal.fst uni.fst > korfinaluni.fst
 - 영어에서 foma를 이용한 형태소분석기 만들기, [morpological analysis with FSTs](http://foma.sourceforge.net/dokuwiki/doku.php?id=wiki:morphtutorial)
   - 이것을 읽어 보면, Rouzeta에 있는 korean.lexc, morphrules.foma, kormoran.script 등을 더 잘 이해할 수 있을 것이다. 
 
-### Problems
+### Problems on Rouzeta and Kyfd
 - 미등록어
 ```
 예) <space> 츠 카 <space> 그 룹 이 <space> 발 매 한 <space> ' 츠 카 <space> S ' <space> 라 는 <space> 이 름 의 <space> 실 버 폰 .
@@ -412,10 +412,13 @@ that become unmanagably large after a time."
 ```
 적절한 길이의 문장단위로 입력했을 때, fst 기반 분석기의 속도는 다른 형태소분석기보다 빠를 것이다.
 하지만, 문장의 길이가 더 길어지거나 입력이 문서인 경우는 문제가 된다. 
-문장이 길수록 탐색해야하는 graph의 크기도 커지기 때문이다. 따라서, 문서로 입력되거나 문장의 길이가
-매우 긴 경우를 처리하는 별도의 방법이 필요하다. 문장분리기를 사용하거나, 윈도우를 이동시키며 
-분석하는 방법 등이 있을 수 있다.
-이런 방법을 사용하면 미등록어로 인해 분석이 실패할때도 해당하는 문장이나 어절만 제외하고
+문장이 길수록 탐색해야하는 composed fst의 크기도 커지기 때문이다. 따라서, 문서로 입력되거나 문장의 길이가
+매우 긴 경우를 처리하는 별도의 방법이 필요하다. 문장분리기를 사용하거나, 윈도우를 이동시키며 분석하는 방법 등이 
+있을 수 있다. 이런 방법을 사용하면 미등록어로 인해 분석이 실패할때도 해당하는 문장이나 어절만 제외하고
 나머지를 분석할 수 있게 되는 효과도 얻을 수 있다.
+또 하나의 문제는 매번 입력 문장을 linear fst로 만들고 composition한 다음, shortest path를 탐색한다는 것이다. 
+composition과 shortest path에 들어가는 비용은 생각보다 매우 크다. 따라서, composition 없이 단순히 fst를
+탐색하면서 분석을 끝내는 방법이 필요하다. 이렇게 되면 위 '메모리 증가'에서 언급된 문제도 사라질 것이다. 
+
 ```
 
