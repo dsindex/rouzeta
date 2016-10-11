@@ -402,7 +402,8 @@ fst를 다시 로딩하게 된다. 이것은 입력을 fst로 만들어서 compo
 to flush the memory of expanded states for dynamically composed models 
 that become unmanagably large after a time."
 
-따라서 kyfd를 그대로 서비스에 사용하기에는 적합하지 않아보인다. 
-메모리가 늘어나지 않도록 수정하거나 별도의 fst decoding 모듈을 개발해야할 필요성이 있다.
+대량의 문서를 입력해서 메모리 증가를 모니터링한 결과 그렇게 큰 변화는 없었다. 
+만약, 메모리가 꾸준히 증가한다면kyfd를 그대로 서비스에 사용하기에는 적합하지 않을 것이다.
+(메모리가 늘어나지 않도록 수정하거나 별도의 fst decoding 모듈을 개발해야 함)
 ```
 
