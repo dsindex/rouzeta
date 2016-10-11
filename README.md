@@ -385,9 +385,12 @@ $ fstcompose korfinal.fst uni.fst > korfinaluni.fst
 
 여기서 '▲'는 unknown symbol인데, kyfd에서 "-unknown '?'" 이렇게 지정해주면 아래와 같이 분석된다. 
 
-unknown을 지정하지 않으면 오류가 발생한다. 
+가 볍 /irrb /vj _ㄴ /ed <space> 문 구 /nc <space> 수 정 /nc 은 /pt <space> 제 외 /nc ) /sr <space> ▲ /sf <space> 기 본 /nc <space> 질 문 /nc
 
-기타 unknown symbol때문에 문제가 생기는 부분은 더 찾아봐야할듯.
+unknown을 지정하지 않으면 오류가 발생한다. 
+unknown을 '?'로 지정했기 때문에, 미등록 심벌은 무조건 '/sf'로 태깅될 것이다. 
+
+정확하게 처리하려면 rouzeta에 '<unk>' 심벌을 추가할 필요가 있어 보인다.
 ```
 - 메모리 증가
 ```
