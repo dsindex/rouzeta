@@ -277,31 +277,9 @@ output symbol table                               none
 ...
 ```
 
-- `korfinaluni.fst`를 만드는 방법(해보지는 않았음)
-```
-# Rouzeta FST를 inverse 연산으로 뒤집은 다음 AT&T 포맷으로 저장한다. 
-$ foma 
-foma[0]: load stack kor.stack
-foma[0]: invert net
-foma[0]: write att > korinvert.fomaatt
-...
-$ more korinvert.fomaatt
-...
-1	113855	/ad	@0@
-1	113342	/it	@0@
-1	2	/vb	@0@
-...
-127409	66519	국	국
-127409	98649	군	군
-127409	66516	궁	궁
-127409	104865	귀	귀
-...
-# AT&T 포맷을 openfst 포맷으로 변경하고 fst로 빌드하자(korfinal.fst)
-# 세종코퍼스로부터 unigram FST를 추출해서 openfst 포맷으로 만든후 빌드한다(uni.fst)
-# fstcompose를 이용해서 composition
-$ fstcompose korfinal.fst uni.fst > korfinaluni.fst
-```
-
+- `korfinaluni.fst`를 만드는 방법
+  - [유니그램 한국어 형태소 분석기를 만들기 위한 자료들](https://shleekr.github.io/) 포스트 참조
+  
 - 바이그램 태거
   - [바이그램 한국어 품사 태거](https://shleekr.github.io/)
   - 지금까지 언급한 태거는 유니그램 확률만을 사용했지만, 바이그램 태거는 생성확률과 전이확률을 이용한다. fst의 사이즈는 좀 많이 커지지만(600M) 태깅 정확률은 좋아진다.
